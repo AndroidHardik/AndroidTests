@@ -1,0 +1,88 @@
+apply plugin: 'com.android.application'
+ext {
+    keystore = projectDir.toString() + '/../production121.jks'
+}
+android {
+    signingConfigs {
+        production121Config {
+            keyAlias 'production121'
+            keyPassword 'Production@121'
+            storeFile file(keystore)
+            storePassword 'Production@121'
+
+        }
+        qa121Config {
+            keyAlias 'qa121'
+            keyPassword 'QA@121'
+            storeFile file(keystore)
+            storePassword 'QA@121'
+
+        }
+        development121Config {
+            keyAlias 'development121'
+            keyPassword 'Development@121'
+            storeFile file(keystore)
+            storePassword 'Development@121'
+
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.androidtest1"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.1"
+
+    }
+    android {
+        lintOptions {
+            checkReleaseBuilds false
+            // Or, if you prefer, you can continue to check for errors in release builds,
+            // but continue the build even when errors are found:
+            abortOnError false
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    useLibrary 'org.apache.http.legacy'
+    productFlavors {
+        Production {
+            applicationId "com.androidtest1.production"
+            signingConfig signingConfigs.production121Config
+            versionCode 1
+            versionName "@string/versionName"
+            buildConfigField "String", "NAME", "\"Production\""
+
+        }
+        QA {
+            applicationId "com.androidtest1.qa"
+            signingConfig signingConfigs.qa121Config
+            versionCode 1
+            versionName "@string/versionName"
+            buildConfigField "String", "NAME", "\"QA\""
+        }
+        Development {
+            applicationId "com.androidtest1.development"
+            signingConfig signingConfigs.development121Config
+            versionCode 1
+            versionName "@string/versionName"
+            buildConfigField "String", "NAME", "\"Development\""
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+}
